@@ -1,7 +1,7 @@
 import os
 import struct
 import datetime
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed  # 直接从futures导入as_completed
 
 def process_file(src_path, dst_path, market):
     """单个文件处理函数，用于多线程"""
@@ -27,7 +27,7 @@ def process_directory(src_dir, dst_base_dir, market, max_workers=5):
             tasks.append(executor.submit(process_file, src_path, dst_path, market))
         
         # 等待所有任务完成
-        for future in concurrent.futures.as_completed(tasks):
+        for future in as_completed(tasks): 
             try:
                 future.result()
             except Exception as exc:
